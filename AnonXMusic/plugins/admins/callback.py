@@ -34,8 +34,6 @@ from config import (
 )
 from strings import get_string
 
-checker = {}
-upvoters = {}
 
 
 @app.on_callback_query(filters.regex("ADMIN") & ~BANNED_USERS)
@@ -44,92 +42,28 @@ async def del_back_playlist(client, CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
     callback_request = callback_data.split(None, 1)[1]
     command, chat = callback_request.split("|")
-    if "_" in str(chat):
-        bet = chat.split("_")
-        chat = bet[0]
-        counter = bet[1]
     chat_id = int(chat)
     if not await is_active_chat(chat_id):
-        return await CallbackQuery.answer(_["general_5"], show_alert=True)
+        return await CallbackQuery.answer(
+            _["general_6"], show_alert=True
+        )
     mention = CallbackQuery.from_user.mention
-    if command == "UpVote":
-        if chat_id not in votemode:
-            votemode[chat_id] = {}
-        if chat_id not in upvoters:
-            upvoters[chat_id] = {}
-
-        voters = (upvoters[chat_id]).get(CallbackQuery.message.id)
-        if not voters:
-            upvoters[chat_id][CallbackQuery.message.id] = []
-
-        vote = (votemode[chat_id]).get(CallbackQuery.message.id)
-        if not vote:
-            votemode[chat_id][CallbackQuery.message.id] = 0
-
-        if CallbackQuery.from_user.id in upvoters[chat_id][CallbackQuery.message.id]:
-            (upvoters[chat_id][CallbackQuery.message.id]).remove(
-                CallbackQuery.from_user.id
-            )
-            votemode[chat_id][CallbackQuery.message.id] -= 1
-        else:
-            (upvoters[chat_id][CallbackQuery.message.id]).append(
-                CallbackQuery.from_user.id
-            )
-            votemode[chat_id][CallbackQuery.message.id] += 1
-        upvote = await get_upvote_count(chat_id)
-        get_upvotes = int(votemode[chat_id][CallbackQuery.message.id])
-        if get_upvotes >= upvote:
-            votemode[chat_id][CallbackQuery.message.id] = upvote
-            try:
-                exists = confirmer[chat_id][CallbackQuery.message.id]
-                current = db[chat_id][0]
-            except:
-                return await CallbackQuery.edit_message_text(f"ғᴀɪʟᴇᴅ.")
-            try:
-                if current["vidid"] != exists["vidid"]:
-                    return await CallbackQuery.edit_message.text(_["admin_35"])
-                if current["file"] != exists["file"]:
-                    return await CallbackQuery.edit_message.text(_["admin_35"])
-            except:
-                return await CallbackQuery.edit_message_text(_["admin_36"])
-            try:
-                await CallbackQuery.edit_message_text(_["admin_37"].format(upvote))
-            except:
-                pass
-            command = counter
-            mention = "ᴜᴘᴠᴏᴛᴇs"
-        else:
-            if (
-                CallbackQuery.from_user.id
-                in upvoters[chat_id][CallbackQuery.message.id]
-            ):
-                await CallbackQuery.answer(_["admin_38"], show_alert=True)
+    is_non_admin = await is_nonadmin_chat(
+        CallbackQuery.message.chat.id
+    )
+    if not is_non_admin:
+        if CallbackQuery.from_user.id not in SUDOERS:
+            admins = adminlist.get(CallbackQuery.message.chat.id)
+            if not admins:
+                return await CallbackQuery.answer(
+                    _["admin_18"], show_alert=True
+                )
             else:
-                await CallbackQuery.answer(_["admin_39"], show_alert=True)
-            upl = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=f"👍 {get_upvotes}",
-                            callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
-                        )
-                    ]
-                ]
-            )
-            await CallbackQuery.answer(_["admin_40"], show_alert=True)
-            return await CallbackQuery.edit_message_reply_markup(reply_markup=upl)
-    else:
-        is_non_admin = await is_nonadmin_chat(CallbackQuery.message.chat.id)
-        if not is_non_admin:
-            if CallbackQuery.from_user.id not in SUDOERS:
-                admins = adminlist.get(CallbackQuery.message.chat.id)
-                if not admins:
-                    return await CallbackQuery.answer(_["admin_13"], show_alert=True)
-                else:
-                    if CallbackQuery.from_user.id not in admins:
-                        return await CallbackQuery.answer(
-                            _["admin_14"], show_alert=True
-                        )
+                if CallbackQuery.from_user.id not in admins:
+                    return await CallbackQuery.answer(
+                        _["admin_19"], show_alert=True
+                    )
+        
     if command == "Pause":
         if not await is_music_playing(chat_id):
             return await CallbackQuery.answer(_["admin_1"], show_alert=True)
@@ -159,7 +93,7 @@ async def del_back_playlist(client, CallbackQuery, _):
     elif command == "Skip" or command == "Replay":
         check = db.get(chat_id)
         if command == "Skip":
-            txt = f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
+            txt = f"➻ 𝐒ᴛʀᴇᴀᴍ 𝐒ᴋɪᴩᴩᴇᴅ 🎄\n│ \n└𝐁ʏ : {mention} 🥀"
             popped = None
             try:
                 popped = check.pop(0)
@@ -167,7 +101,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                     await auto_clean(popped)
                 if not check:
                     await CallbackQuery.edit_message_text(
-                        f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
+                        f"➻ 𝐒ᴛʀᴇᴀᴍ 𝐒ᴋɪᴩᴩᴇᴅ 🎄\n│ \n└𝐁ʏ : {mention} 🥀"
                     )
                     await CallbackQuery.message.reply_text(
                         text=_["admin_6"].format(
@@ -182,7 +116,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 try:
                     await CallbackQuery.edit_message_text(
-                        f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
+                        f"➻ 𝐒ᴛʀᴇᴀᴍ 𝐒ᴋɪᴩᴩᴇᴅ 🎄\n│ \n└𝐁ʏ : {mention} 🥀"
                     )
                     await CallbackQuery.message.reply_text(
                         text=_["admin_6"].format(
@@ -194,7 +128,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 except:
                     return
         else:
-            txt = f"➻ sᴛʀᴇᴀᴍ ʀᴇ-ᴘʟᴀʏᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
+            txt = f"➻ 𝐒ᴛʀᴇᴀᴍ 𝐑ᴇ-𝐏ʟᴀʏᴇᴅ 🎄\n│ \n└𝐁ʏ : {mention} 🥀"
         await CallbackQuery.answer()
         queued = check[0]["file"]
         title = (check[0]["title"]).title()
