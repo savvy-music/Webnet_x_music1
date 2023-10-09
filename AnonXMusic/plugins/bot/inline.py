@@ -36,22 +36,22 @@ async def inline_query_handler(client, query):
                 [
                     [
                         InlineKeyboardButton(
-                            text="ʏᴏᴜᴛᴜʙᴇ 🎄",
+                            text="𝐘ᴏᴜᴛᴜʙᴇ 🎄",
                             url=link,
                         )
                     ],
                 ]
             )
             searched_text = f"""
-❄ <b>ᴛɪᴛʟᴇ :</b> <a href={link}>{title}</a>
+❄ <b>𝐓ɪᴛʟᴇ :</b> <a href={link}>{title}</a>
 
-⏳ <b>ᴅᴜʀᴀᴛɪᴏɴ :</b> {duration} ᴍɪɴᴜᴛᴇs
-👀 <b>ᴠɪᴇᴡs :</b> <code>{views}</code>
-🎥 <b>ᴄʜᴀɴɴᴇʟ :</b> <a href={channellink}>{channel}</a>
-⏰ <b>ᴘᴜʙʟɪsʜᴇᴅ ᴏɴ :</b> {published}
+⏳ <b>𝐃ᴜʀᴀᴛɪᴏɴ :</b> {duration} ᴍɪɴᴜᴛᴇs
+👀 <b>𝐕ɪᴇᴡs :</b> <code>{views}</code>
+🎥 <b>𝐂ʜᴀɴɴᴇʟ :</b> <a href={channellink}>{channel}</a>
+⏰ <b>𝐏ᴜʙʟɪsʜᴇᴅ 𝐎ɴ :</b> {published}
 
 
-<u><b>➻ ɪɴʟɪɴᴇ sᴇᴀʀᴄʜ ᴍᴏᴅᴇ ʙʏ {app.name}</b></u>"""
+<u><b>➻ 𝐈ɴʟɪɴᴇ 𝐒ᴇᴀʀᴄʜ 𝐏ᴏᴡᴇʀᴇᴅ 𝐁ʏ {app.name}</b></u>"""
             answers.append(
                 InlineQueryResultPhoto(
                     photo_url=thumbnail,
