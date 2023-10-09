@@ -7,7 +7,7 @@ import numpy as np
 import random
 from PIL import Image, ImageChops, ImageOps, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from youtubesearchpython.__future__ import VideosSearch
-from AnonXMusic.resource import thumbs, color,
+from AnonXMusic.resource import thumbs, color
 from AnonXMusic import app
 from config import YOUTUBE_IMG_URL
 
