@@ -1,19 +1,15 @@
 import os
 import re
 import textwrap
-
 import aiofiles
 import aiohttp
 import numpy as np
 import random
-
 from PIL import Image, ImageChops, ImageOps, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from youtubesearchpython.__future__ import VideosSearch
-
-from PrachiMusic import bot
-from PrachiMusic.resource import thumbs, colors
-from PrachiMusic.utilities.config import YOUTUBE_IMG_URL
-
+from AnonXMusic.resource import thumbs, color,
+from AnonXMusic import app
+from config import YOUTUBE_IMG_URL
 
 
 def changeImageSize(maxWidth, maxHeight, image):
@@ -87,7 +83,7 @@ async def gen_thumb(videoid, user_id):
         images = random.choice(thumbs)
         border = random.choice(colors)
         youtube = Image.open(f"cache/thumb{videoid}.png")
-        bg = Image.open(f"PrachiMusic/resource/{images}.png")
+        bg = Image.open(f"AnonXMusic/resource/{images}.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(30))
@@ -122,10 +118,10 @@ async def gen_thumb(videoid, user_id):
         background.paste(image3, (0, 0), mask=image3)
         img = ImageOps.expand(background, border=10, fill=f"{border}")
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("PrachiMusic/resource/font2.ttf", 45)
-        ImageFont.truetype("PrachiMusic/resource/font2.ttf", 70)
-        arial = ImageFont.truetype("PrachiMusic/resource/font2.ttf", 30)
-        ImageFont.truetype("PrachiMusic/resource/font.ttf", 30)
+        font = ImageFont.truetype("AnonXMusic/resource/font2.ttf", 45)
+        ImageFont.truetype("AnonXMusic/resource/font2.ttf", 70)
+        arial = ImageFont.truetype("AnonXMusic/resource/font2.ttf", 30)
+        ImageFont.truetype("AnonXMusic/resource/font.ttf", 30)
         para = textwrap.wrap(title, width=32)
         try:
             draw.text(
@@ -229,7 +225,7 @@ async def que_thumb(videoid, user_id):
         images = random.choice(thumbs)
         border = random.choice(colors)
         youtube = Image.open(f"cache/thumb{videoid}.png")
-        bg = Image.open(f"PrachiMusic/resource/{images}.png")
+        bg = Image.open(f"AnonXMusic/resource/{images}.png")
         image1 = changeImageSize(1280, 720, youtube)
         image2 = image1.convert("RGBA")
         background = image2.filter(filter=ImageFilter.BoxBlur(30))
@@ -264,10 +260,10 @@ async def que_thumb(videoid, user_id):
         background.paste(image3, (0, 0), mask=image3)
         img = ImageOps.expand(background, border=10, fill=f"{border}")
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("PrachiMusic/resource/font2.ttf", 45)
-        ImageFont.truetype("PrachiMusic/resource/font2.ttf", 70)
-        arial = ImageFont.truetype("PrachiMusic/resource/font2.ttf", 30)
-        ImageFont.truetype("PrachiMusic/resource/font.ttf", 30)
+        font = ImageFont.truetype("AnonXMusic/resource/font2.ttf", 45)
+        ImageFont.truetype("AnonXMusic/resource/font2.ttf", 70)
+        arial = ImageFont.truetype("AnonXMusic/resource/font2.ttf", 30)
+        ImageFont.truetype("AnonXMusic/resource/font.ttf", 30)
         para = textwrap.wrap(title, width=32)
         try:
             draw.text(
